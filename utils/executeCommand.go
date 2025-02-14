@@ -5,7 +5,7 @@ import (
 	"os/exec"
 )
 
-func ExecuteCommand(requiresSudo bool, args ...string) string {
+func ExecuteCommand(requiresSudo bool, args ...string) []byte {
 	if requiresSudo {
 		args = append([]string{"sudo"}, args...)
 	}
@@ -16,7 +16,7 @@ func ExecuteCommand(requiresSudo bool, args ...string) string {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Error:", err, "\n", string(output))
-		return "error"
+		return nil
 	}
-	return string(output)
+	return output
 }
