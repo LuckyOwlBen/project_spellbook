@@ -6,9 +6,8 @@ import (
 )
 
 func ConnectToOpenVpn() {
-	args :=[]string {"openvpn", "/home/demeter/Downloads/starting_point_cyberblade9876.ovpn"}
-	openVpnResult := utils.ExecuteCommand(true, args...)
-	fmt.Println(string(openVpnResult))
+	args := []string{"openvpn", "/home/demeter/Downloads/starting_point_cyberblade9876.ovpn"}
+	utils.ExecuteAsyncCommand(true, args...)
 }
 
 func DisconnectFromOpenVpn() {

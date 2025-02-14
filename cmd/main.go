@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"os"
 	"project_spellbook/definitions"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
 	definitions.ConnectToOpenVpn()
 	fmt.Println("Provide the IP address you want to ping:")
 	reader := bufio.NewReader(os.Stdin)
