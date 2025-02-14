@@ -9,9 +9,9 @@ import (
 )
 
 func RunNmap(ipAddress string) {
-	args := []string{"nmap", "-sV", "-sC", ipAddress}
+	args := []string{"nmap", "-oX", "-", "-sV", "-sC", ipAddress}
 	nmapResult := utils.ExecuteCommand(true, args...)
-	println(string(nmapResult))
+	//println(string(nmapResult))
 
 	var result nmap.NmapRun
 	err := xml.Unmarshal(nmapResult, &result)
@@ -25,6 +25,10 @@ func RunNmap(ipAddress string) {
 		fmt.Printf("Host: %s\n", host.Addresses[0].Addr)
 		for _, port := range host.Ports {
 			fmt.Printf("Port: %d, State: %s, Service: %s\n", port.PortId, port.State.State, port.Service.Name)
+			if port.Service.Name == "telnet" {
+				fmt.Printf("Telnet service found on port %d\n", port.PortId)
+				ProbeTelnet(ipAddress)
+			}
 		}
 	}
 }
