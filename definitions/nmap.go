@@ -29,6 +29,10 @@ func RunNmap(ipAddress string) {
 				fmt.Printf("Telnet service found on port %d\n", port.PortId)
 				ProbeTelnet(ipAddress)
 			}
+			if port.Service.Name == "ftp" {
+				fmt.Printf("FTP service found on port %d\n", port.PortId)
+				ProbeFTP(ipAddress)
+			}
 		}
 	}
 }
