@@ -33,6 +33,10 @@ func RunNmap(ipAddress string) {
 				fmt.Printf("FTP service found on port %d\n", port.PortId)
 				ProbeFTP(ipAddress)
 			}
+			if port.PortId == 445 {
+				fmt.Printf("SMB service found on port %d\n", port.PortId)
+				ProbeSMB(ipAddress)
+			}
 		}
 	}
 }
