@@ -3,14 +3,14 @@ package definitions
 import (
 	"encoding/xml"
 	"fmt"
-	"project_spellbook/utils"
+	"project_spellbook/cmd/console"
 
 	"github.com/lair-framework/go-nmap"
 )
 
 func RunNmap(ipAddress string) {
 	args := []string{"nmap", "-oX", "-", "-sV", "-sC", ipAddress}
-	nmapResult := utils.ExecuteCommand(true, args...)
+	nmapResult := console.ExecuteCommand(true, args...)
 	//println(string(nmapResult))
 
 	var result nmap.NmapRun

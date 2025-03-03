@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"project_spellbook/definitions"
+	"project_spellbook/cmd/definitions"
+	"project_spellbook/cmd/utils"
 	"strings"
 )
 
@@ -16,6 +17,7 @@ func main() {
 	ipAddress = strings.TrimSpace(ipAddress)
 	fmt.Println("Pinging", ipAddress)
 	definitions.Ping(ipAddress)
-	definitions.RunNmap(ipAddress)
+	//definitions.RunNmap(ipAddress)
+	utils.CompileNetworkMap(ipAddress)
 	definitions.DisconnectFromOpenVpn()
 }
