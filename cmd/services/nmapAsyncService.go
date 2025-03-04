@@ -1,21 +1,20 @@
-package utils
+package services
 
 import (
 	"fmt"
-	"project_spellbook/cmd/definitions"
 	"sync"
 
 	"github.com/t94j0/nmap"
 )
 
-func CompileNetworkMap(ipAddress string) {
+func CompileNetworkMap(ipAddress string) []nmap.Port {
 	var waitGroup sync.WaitGroup
 	//the channel that will hold the results
-	//what will be in the result channel
-	//
 	asyncPortChannel := make(chan []nmap.Port, 10)
 	//the result list
 	scannedPorts := []nmap.Port{}
+	//the open ports
+	openPorts := []nmap.Port{}
 
 	//the list of ranges of up to 10000 ports
 	ranges := [][2]int{
@@ -39,7 +38,7 @@ func CompileNetworkMap(ipAddress string) {
 			//decrement the weight group when the go routine is done
 			defer waitGroup.Done()
 			//scan the network
-			detectedPorts := definitions.MapNetwork(ipAddress, uint16(lowPort), uint16(highPort))
+			detectedPorts := MapNetwork(ipAddress, uint16(lowPort), uint16(highPort))
 			//add the results to the results channel
 			asyncPortChannel <- detectedPorts
 		}(r[0], r[1]) //pass the range to the go routine
@@ -58,8 +57,15 @@ func CompileNetworkMap(ipAddress string) {
 		scannedPorts = append(scannedPorts, portList...)
 	}
 
-	//print the results
 	for _, port := range scannedPorts {
-		fmt.Println(port.ToString())
+		if port.State == "open" {
+			openPorts = append(openPorts, port)
+		}
 	}
+
+	for _, port := range openPorts {
+		fmt.Println("Port", port.ID, "is open")
+	}
+
+	return openPorts
 }
