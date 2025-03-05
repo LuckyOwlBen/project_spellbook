@@ -18,11 +18,14 @@ func MapNetwork(ipAddress string, lowIp uint16, highIp uint16) []nmap.Port {
 	if error != nil {
 		panic(error)
 	}
-
+	fmt.Println("Scan result:", scanResult)
 	host, exists := scanResult.GetHost(ipAddress)
+	//fmt.Println("Host exists:", exists)
+	//fmt.Println("Host:", host)
 
 	if !exists {
-		panic("Host not found")
+		fmt.Println("Host not found")
+		//panic("Host not found")
 	}
 
 	return host.Ports

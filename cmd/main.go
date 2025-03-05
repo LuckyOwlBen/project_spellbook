@@ -17,6 +17,8 @@ func main() {
 	fmt.Println("Pinging", ipAddress)
 	services.Ping(ipAddress)
 	ports := services.CompileNetworkMap(ipAddress)
+	fmt.Println("network mapped successfully")
+	fmt.Println("Checking for exploits")
 	services.CheckForExploits(ports, ipAddress)
 	services.DisconnectFromOpenVpn()
 }

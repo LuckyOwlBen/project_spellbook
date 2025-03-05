@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var smallWebDirectoryPath = "/Downloads/SecLists/Discovery/Web-Content/"
+var smallWebDirectoryPath = "/home/demeter/Downloads/SecLists/Discovery/Web-Content/directory-list-2.3-small.txt"
 
 type ScanResult struct {
 	StatusCode int
@@ -25,7 +25,7 @@ func ScanWebDirectories(ipAddress string, port string) {
 		fmt.Println("Scanning", url)
 		resp, err := http.Get(url)
 		if err != nil {
-			fmt.Println("Error scanning", url, err)
+			//fmt.Println("Error scanning", url, err)
 			continue
 		}
 		results = append(results, ScanResult{
